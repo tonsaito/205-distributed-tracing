@@ -6,6 +6,12 @@ x-common-variables: &common-variables
   LOCAL_ADDRESS: 192.168.0.12
 
 services:
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    networks:
+      - net-local
   consul-service:
     image: consul:latest
     container_name: consul-server
@@ -14,13 +20,13 @@ services:
       - "8500:8500"
       - "8600:8600/udp"
     networks:
-      - consul-net-local
+      - net-local
   configuration-service:
     image: tonsaito/mtc-configuration-service:latest
     environment:
       <<: *common-variables
       PORT: 8888
-      CONFIGURATION_SERVICE_REPOSITORY: https://github.com/tonsaito/configuration-repo-biro.git
+      CONFIGURATION_SERVICE_REPOSITORY: https://github.com/tonsaito/configuration-repo-default.git
     ports:
       - "8888:8888"
     depends_on:
@@ -32,13 +38,12 @@ services:
       PORT: 9080
     ports:
       - "9080:9080"
+    networks:
+      - net-local
     depends_on:
       - configuration-service
-  zipkin:
-    image: openzipkin/zipkin:latest
-    ports:
-      - "9411:9411"
+      - zipkin
 
 networks:
-  consul-net-local:
+  net-local:
     driver: bridge

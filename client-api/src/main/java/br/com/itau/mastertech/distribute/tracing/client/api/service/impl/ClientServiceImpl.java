@@ -7,6 +7,8 @@ import br.com.itau.mastertech.distribute.tracing.client.api.service.CepService;
 import br.com.itau.mastertech.distribute.tracing.client.api.service.ClientService;
 import br.com.itau.mastertech.distribute.tracing.client.api.wrapper.AddressWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.sleuth.annotation.NewSpan;
+import org.springframework.cloud.sleuth.annotation.SpanTag;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +23,8 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public ClientEntity save(ClientModel clientModel) {
+    @NewSpan("save-client")
+    public ClientEntity save(@SpanTag("client-model") ClientModel clientModel) {
         ClientEntity clientEntity = new ClientEntity();
         clientEntity.setName(clientModel.getName());
         clientEntity.setAddress(AddressWrapper.toAddressEntity(cepService.getAddress(clientModel.getCep())));
