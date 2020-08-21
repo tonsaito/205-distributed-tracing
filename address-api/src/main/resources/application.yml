@@ -1,0 +1,11 @@
+server:
+  port: 5000
+  error:
+    include-stacktrace: never
+
+spring:
+  application:
+    name: address-service
+  sleuth:
+    sampler:
+      probability:1

@@ -1,0 +1,11 @@
+server:
+  port: 5100
+  error:
+    include-stacktrace: never
+
+spring:
+  application:
+    name: client-service
+  sleuth:
+    sampler:
+      probability:1
